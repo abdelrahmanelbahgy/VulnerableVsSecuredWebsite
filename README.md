@@ -37,7 +37,7 @@ Better-SQLite3
 
 **Abdelrahman Mohamed Elbahgy**: Penetration testing & Exploitation
 
-**Seif Haytham Ali**: Penetration Testing & Exploitation
+**Seif Haytham Ahmed Ali**: Penetration Testing & Exploitation
 
 **Seif Khaled Othman**: Analysis & Remediation
 
