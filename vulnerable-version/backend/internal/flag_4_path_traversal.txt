@@ -1,2 +1,0 @@
-flag_4_Fourth_Part_Of_the_hash{71f969}
-Clue: the admin patient search endpoint is not sanitized.
