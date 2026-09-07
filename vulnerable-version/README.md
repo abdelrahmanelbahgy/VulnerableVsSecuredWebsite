@@ -105,7 +105,8 @@ The exact port may vary depending on the .env configuration.
 #### **4. Path Traversal:** The vulnerable report download functionality uses user-controlled filenames to construct file paths.
 #### **5. SQL Injection:** The vulnerable patient-search endpoint directly concatenates user input into an SQL statement.
 #### **6. Cross-Site Request Forgery (CSRF):** The vulnerable application does not adequately verify the origin of state-changing requests.
-#### **7. Information Disclosure:** he vulnerable version exposes the backup directory through static file serving.This could expose configuration and other sensitive files. 
+#### **7. Information Disclosure:** The vulnerable version exposes the backup directory through static file serving.This could expose configuration and other sensitive files. 
+#### **8. Cross-site Scripting (XSS):** The vulnerable version does not properly sanitize or escape user-controlled input before rendering it in web pages. This allows an attacker to inject malicious JavaScript into application content, which may then be executed in the browser of other users.
 
 ## **6) Security Fixes Applied:**
 #### **1. Server-Side Template Injection (SSTI):**
@@ -129,6 +130,8 @@ The secured version applies CSRF protection to sensitive state-changing operatio
 #### **7. Information Disclosure:**
 The secured version removes public access to backup files and prevents sensitive configuration files from being served as static resources.
 Sensitive configuration is stored outside publicly accessible directories and secrets are provided through environment variables or secure configuration mechanisms.
+#### **8. Cross-site Scripting (XSS):**
+The secured version ensures that user-controlled input is treated as data rather than executable HTML or JavaScript. User input is properly escaped before being rendered, and unsafe HTML content is not allowed where it is not required. Where applicable, the application also uses appropriate Content Security Policy (CSP) controls to reduce the impact of potential XSS vulnerabilities.
 
 
 ## **7) Security flags**
