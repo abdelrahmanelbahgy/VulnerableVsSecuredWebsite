@@ -118,4 +118,4 @@ This version is intentionally vulnerable.
 
 Do not deploy this application to the public Internet or use it with real patient information, credentials, or production databases.
 
-The application should only be executed in an isolated testing/laboratory environment.
+The application should only be executed in an isolated and controlled environment.
