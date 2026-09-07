@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Doctor Dashboard - CyberClinic</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="container">
+            <div class="nav-brand">
+                <h2>🏥 CyberClinic</h2>
+            </div>
+            <div class="nav-links">
+                <span id="userName"></span>
+                <a href="#" id="logoutBtn">Logout</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Dashboard -->
+    <div class="dashboard">
+        <aside class="sidebar">
+            <ul class="sidebar-menu">
+                <li><a href="#" class="active" data-tab="schedule">My Schedule</a></li>
+                <li><a href="#" data-tab="patients">Patients</a></li>
+                <li><a href="#" data-tab="records">Medical Records</a></li>
+                <li><a href="#" data-tab="profile">Profile</a></li>
+                <li><a href="#" data-tab="tools">Clinic Tools</a></li>
+            </ul>
+        </aside>
+
+        <main class="dashboard-content">
+            <!-- Schedule Tab -->
+            <div id="schedule" class="tab-content active">
+                <h2>My Schedule</h2>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <h3 id="todayCount">0</h3>
+                        <p>Today's Appointments</p>
+                    </div>
+                    <div class="stat-card">
+                        <h3 id="weekCount">0</h3>
+                        <p>This Week</p>
+                    </div>
+                    <div class="stat-card">
+                        <h3 id="totalPatients">0</h3>
+                        <p>Total Patients</p>
+                    </div>
+                </div>
+                <div class="filters">
+                    <input type="date" id="filterDate" placeholder="Filter by date">
+                    <select id="filterStatus">
+                        <option value="">All Status</option>
+                        <option value="scheduled">Scheduled</option>
+                        <option value="completed">Completed</option>
+                        <option value="cancelled">Cancelled</option>
+                    </select>
+                </div>
+                <div id="scheduleList" class="appointments-list"></div>
+            </div>
+
+            <!-- Patients Tab -->
+            <div id="patients" class="tab-content">
+                <h2>My Patients</h2>
+                <input type="text" id="searchPatients" placeholder="Search patients...">
+                <div id="patientsList" class="patients-list"></div>
+            </div>
+
+            <!-- Medical Records Tab -->
+            <div id="records" class="tab-content">
+                <h2>Add Medical Record</h2>
+                <form id="addRecordForm">
+                    <div class="form-group">
+                        <label for="patientSelect">Select Patient</label>
+                        <select id="patientSelect" name="patient" required>
+                            <option value="">Choose a patient...</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="diagnosis">Diagnosis</label>
+                        <input type="text" id="diagnosis" name="diagnosis" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="prescription">Prescription</label>
+                        <textarea id="prescription" name="prescription" rows="3" required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="notes">Notes</label>
+                        <textarea id="notes" name="notes" rows="4"></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Add Record</button>
+                </form>
+                <div id="recordMessage" class="message"></div>
+            </div>
+
+            <!-- Profile Tab -->
+            <div id="profile" class="tab-content">
+                <h2>My Profile</h2>
+                <form id="profileForm">
+                    <div class="form-group">
+                        <label for="profileName">Full Name</label>
+                        <input type="text" id="profileName" name="fullName" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="profileEmail">Email</label>
+                        <input type="email" id="profileEmail" name="email" required disabled>
+                    </div>
+                    <div class="form-group">
+                        <label for="profilePhone">Phone Number</label>
+                        <input type="tel" id="profilePhone" name="phone" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="specialization">Specialization</label>
+                        <input type="text" id="specialization" name="specialization" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="licenseNumber">License Number</label>
+                        <input type="text" id="licenseNumber" name="licenseNumber" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Update Profile</button>
+                </form>
+                <div id="profileMessage" class="message"></div>
+            </div>
+
+            <!-- Clinic Tools Tab (SSTI + SSRF demos) -->
+            <div id="tools" class="tab-content">
+                <h2>Appointment Letter Generator</h2>
+                <form id="letterForm">
+                    <div class="form-group">
+                        <label for="letterPatientName">Patient Name</label>
+                        <input type="text" id="letterPatientName" value="Test Patient">
+                    </div>
+                    <div class="form-group">
+                        <label for="letterDate">Date</label>
+                        <input type="text" id="letterDate" value="2026-09-10">
+                    </div>
+                    <div class="form-group">
+                        <label for="letterTemplate">Letter Template (advanced — leave default for standard letter)</label>
+                        <textarea id="letterTemplate" rows="3" placeholder="Dear {{patientName}}, ..."></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Generate Letter</button>
+                </form>
+                <pre id="letterResult"></pre>
+
+                <hr>
+
+                <h2>Lab Result Preview</h2>
+                <div class="form-group">
+                    <label for="labUrlInput">Resource URL</label>
+                    <input type="text" id="labUrlInput" placeholder="https://example.com/lab-image.png">
+                    <button id="labPreviewBtn" class="btn btn-primary">Preview</button>
+                </div>
+                <pre id="labPreviewResult"></pre>
+            </div>
+        </main>
+    </div>
+
+    <script src="js/doctor.js"></script>
+</body>
+</html>
