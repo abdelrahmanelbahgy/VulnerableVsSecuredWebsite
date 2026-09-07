@@ -106,6 +106,7 @@ The exact port may vary depending on the .env configuration.
 #### 5. SQL Injection
 #### 6. Cross-Site Request Forgery (CSRF)
 #### 7. Information Disclosure
+#### 8. Cross-Site Scripting (XSS)
 
 ## **6) Security flags**
 The vulnerable application contains a seven-part flag chain associated with the vulnerabilities.
