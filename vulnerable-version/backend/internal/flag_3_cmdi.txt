@@ -1,0 +1,2 @@
+flag_3_Third_Part_Of_the_hash{85a3ce}
+Clue: report downloads live under /api/reports/download?file=
