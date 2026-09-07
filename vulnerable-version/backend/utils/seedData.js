@@ -15,13 +15,15 @@ mongoose.connect(process.env.MONGODB_URI, {
 const seedData = async () => {
     try {
         // Clear existing data
-        await User.deleteMany();
-        await Appointment.deleteMany();
-        await MedicalRecord.deleteMany();
+        await User.deleteMany({});
+        await Appointment.deleteMany({});
+        await MedicalRecord.deleteMany({});
 
         console.log('Cleared existing data');
 
+        // =========================
         // Create Admin
+        // =========================
         const admin = await User.create({
             fullName: 'Admin User',
             email: 'admin@clinic.com',
@@ -29,9 +31,12 @@ const seedData = async () => {
             phone: '1234567890',
             role: 'admin'
         });
+
         console.log('Admin created: admin@clinic.com / TechTrekTeam9');
 
+        // =========================
         // Create Doctors
+        // =========================
         const doctors = await User.create([
             {
                 fullName: 'Dr. Adel Shakal',
@@ -70,9 +75,12 @@ const seedData = async () => {
                 licenseNumber: 'MD45678'
             }
         ]);
-        console.log('Doctors created - email: [doctor_email] / password: doctor123');
 
+        console.log('Doctors created');
+
+        // =========================
         // Create Patients
+        // =========================
         const patients = await User.create([
             {
                 fullName: 'Taher Mohamed Taher',
@@ -120,16 +128,27 @@ const seedData = async () => {
                 gender: 'male'
             }
         ]);
-        console.log('Patients created - email: [patient_email] / password: patient123');
 
-        // Create Appointments
+        console.log('Patients created');
+
+        // =========================
+        // Create Dates
+        // =========================
         const today = new Date();
+
         const tomorrow = new Date(today);
         tomorrow.setDate(tomorrow.getDate() + 1);
+
         const nextWeek = new Date(today);
         nextWeek.setDate(nextWeek.getDate() + 7);
 
-        const appointments = await Appointment.create([
+        const lastWeek = new Date(today);
+        lastWeek.setDate(lastWeek.getDate() - 7);
+
+        // =========================
+        // Create Appointments
+        // =========================
+        await Appointment.create([
             {
                 patient: patients[0]._id,
                 doctor: doctors[0]._id,
@@ -173,16 +192,19 @@ const seedData = async () => {
             {
                 patient: patients[0]._id,
                 doctor: doctors[1]._id,
-                date: new Date(today.getTime() - 7 * 24 * 60 * 60 * 1000),
+                date: lastWeek,
                 time: '10:00',
                 reason: 'Annual physical examination',
                 status: 'completed'
             }
         ]);
+
         console.log('Appointments created');
 
+        // =========================
         // Create Medical Records
-        const records = await MedicalRecord.create([
+        // =========================
+        await MedicalRecord.create([
             {
                 patient: patients[0]._id,
                 doctor: doctors[0]._id,
@@ -216,26 +238,44 @@ const seedData = async () => {
                 date: new Date(today.getTime() - 20 * 24 * 60 * 60 * 1000)
             }
         ]);
+
         console.log('Medical records created');
 
-        console.log('\n=== SEED DATA COMPLETED ===');
-        console.log('\nTest Accounts:');
-        console.log('Admin: admin@clinic.com / admin123');
-        console.log('\nDoctors (all password: doctor123):');
-        console.log('- sarah.johnson@clinic.com (Cardiology)');
-        console.log('- michael.chen@clinic.com (Pediatrics)');
-        console.log('- emily.davis@clinic.com (Dermatology)');
-        console.log('- james.wilson@clinic.com (Orthopedics)');
-        console.log('\nPatients (all password: patient123):');
-        console.log('- john.smith@email.com');
-        console.log('- emma.brown@email.com');
-        console.log('- robert.taylor@email.com');
-        console.log('- lisa.anderson@email.com');
-        console.log('- david.martinez@email.com');
+        // =========================
+        // Final Output
+        // =========================
+        console.log('\n========================================');
+        console.log('       SEED DATA COMPLETED SUCCESSFULLY');
+        console.log('========================================');
 
-        process.exit();
+        console.log('\nTest Accounts:');
+
+        console.log('\nAdmin:');
+        console.log('Email: admin@clinic.com');
+        console.log('Password: TechTrekTeam9');
+
+        console.log('\nDoctors (all password: doctor123):');
+        console.log('- adel.shakal@clinic.com');
+        console.log('- tamer.elgayyar@clinic.com');
+        console.log('- mahmoud.ghanem@clinic.com');
+        console.log('- mohamed.aboutrika@clinic.com');
+
+        console.log('\nPatients (all password: patient123):');
+        console.log('- taher.mohamed@email.com');
+        console.log('- faten.hamama@email.com');
+        console.log('- mohamed.elshennawy@email.com');
+        console.log('- ziadzaza@email.com');
+        console.log('- abdelrahman.elbahgy@email.com');
+
+        console.log('\n========================================\n');
+
+        await mongoose.connection.close();
+        process.exit(0);
+
     } catch (error) {
         console.error('Error seeding data:', error);
+
+        await mongoose.connection.close();
         process.exit(1);
     }
 };
