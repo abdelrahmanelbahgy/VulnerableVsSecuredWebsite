@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Patient Quick Portal - CyberClinic (CSRF Demo)</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="container">
+            <div class="nav-brand"><h2>🏥 CyberClinic — Quick Portal</h2></div>
+        </div>
+    </nav>
+
+    <div class="container" style="max-width:600px;margin:40px auto;">
+        <p><em>This is an isolated, cookie-based "quick access" login, separate from the
+        main patient/doctor/admin portal (which uses JWT). It exists specifically to
+        demonstrate CSRF — and its fix.</em></p>
+
+        <h2>Quick Login</h2>
+        <div class="form-group">
+            <input type="text" id="usernameInput" placeholder="Username" value="victim_patient">
+            <button id="loginBtn" class="btn btn-primary">Login</button>
+        </div>
+        <div id="loginMessage" class="message"></div>
+
+        <hr>
+
+        <h2>Account Settings</h2>
+        <p>Backup notification email is used if we can't reach you at your primary address.</p>
+        <div class="form-group">
+            <input type="email" id="backupEmailInput" placeholder="backup@example.com">
+            <button id="updateEmailBtn" class="btn btn-primary">Update Backup Email</button>
+        </div>
+        <div id="updateMessage" class="message"></div>
+
+        <hr>
+
+        <h2>Current Session</h2>
+        <button id="whoamiBtn" class="btn">Check Session</button>
+        <pre id="whoamiResult"></pre>
+    </div>
+
+    <script>
+        const API_URL = `http://${window.location.hostname}:5000/api`;
+        let csrfToken = null; // held only in JS memory for this page's session
+
+        document.getElementById('loginBtn').addEventListener('click', async () => {
+            const username = document.getElementById('usernameInput').value;
+            const res = await fetch(`${API_URL}/session/login`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                credentials: 'include',
+                body: JSON.stringify({ username })
+            });
+            const data = await res.json();
+            // --- FIX: the CSRF token is only ever obtained from this
+            // same-origin JSON response body — never from a cookie, and
+            // never from anywhere a cross-site attacker page could read. ---
+            csrfToken = data.csrfToken || null;
+            document.getElementById('loginMessage').textContent = data.message || JSON.stringify(data);
+        });
+
+        // --- FIX: this is now a POST request (state changes should never
+        // be GET), and includes the CSRF token as a custom header. An
+        // attacker page cannot forge this header without knowing the
+        // token, and cannot read the token from the login response due
+        // to the browser's same-origin policy + the server's CORS config. ---
+        document.getElementById('updateEmailBtn').addEventListener('click', async () => {
+            if (!csrfToken) {
+                document.getElementById('updateMessage').textContent = 'Please log in first.';
+                return;
+            }
+            const email = document.getElementById('backupEmailInput').value;
+            const res = await fetch(`${API_URL}/session/update-backup-email`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-Token': csrfToken
+                },
+                credentials: 'include',
+                body: JSON.stringify({ email })
+            });
+            const data = await res.json();
+            document.getElementById('updateMessage').textContent = data.message || JSON.stringify(data);
+        });
+
+        document.getElementById('whoamiBtn').addEventListener('click', async () => {
+            const res = await fetch(`${API_URL}/session/whoami`, { credentials: 'include' });
+            const data = await res.json();
+            document.getElementById('whoamiResult').textContent = JSON.stringify(data, null, 2);
+        });
+    </script>
+</body>
+</html>
