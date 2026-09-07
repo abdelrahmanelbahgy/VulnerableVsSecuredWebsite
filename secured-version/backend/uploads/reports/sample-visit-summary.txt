@@ -1,0 +1,5 @@
+Visit Summary
+--------------
+Patient: Test Patient Alpha
+Summary: Routine checkup, no issues noted.
+(Dummy data)
