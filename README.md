@@ -99,16 +99,42 @@ http://localhost:5000
 The exact port may vary depending on the .env configuration.
 
 ## **5) Vulnerabilities Implemented:**
-#### 1. Server-Side Template Injection (SSTI)
-#### 2. Server-Side Request Forgery (SSRF)
-#### 3. Command Injection
-#### 4. Path Traversal
-#### 5. SQL Injection
-#### 6. Cross-Site Request Forgery (CSRF)
-#### 7. Information Disclosure
-#### 8. Cross-Site Scripting (XSS)
+#### **1. Server-Side Template Injection (SSTI):** The vulnerable version allowed unsafe template processing.
+#### **2. Server-Side Request Forgery (SSRF):** The vulnerable version accepts an arbitrary URL and performs a server-side request.
+#### **3. Command Injection:** The vulnerable implementation directly concatenates user input into a system command
+#### **4. Path Traversal:** The vulnerable report download functionality uses user-controlled filenames to construct file paths.
+#### **5. SQL Injection:** The vulnerable patient-search endpoint directly concatenates user input into an SQL statement.
+#### **6. Cross-Site Request Forgery (CSRF):** The vulnerable application does not adequately verify the origin of state-changing requests.
+#### **7. Information Disclosure:** The vulnerable version exposes the backup directory through static file serving.This could expose configuration and other sensitive files. 
+#### **8. Cross-site Scripting (XSS):** The vulnerable version does not properly sanitize or escape user-controlled input before rendering it in web pages. This allows an attacker to inject malicious JavaScript into application content, which may then be executed in the browser of other users.
 
-## **6) Security flags**
+## **6) Security Fixes Applied:**
+#### **1. Server-Side Template Injection (SSTI):**
+The secured version separates template structure from user-controlled data and avoids treating untrusted input as a Handlebars template.
+User-controlled values are handled as data rather than executable template content.
+
+User-controlled values are handled as data rather than executable template content.
+#### **2. Server-Side Request Forgery (SSRF):** 
+The secured implementation validates the supplied URL before making the request.
+#### **3. Command Injection:**
+The secured implementation validates the hostname/IP address and avoids constructing shell commands from raw user input.
+Where system commands are required, arguments are passed separately rather than through a shell command string.
+#### **4. Path Traversal:**
+The secured version validates requested filenames and restricts file access to the intended reports directory.
+Path normalization and directory-boundary checks are used to prevent access outside the allowed directory.
+#### **5. SQL Injection:**
+The secured version uses parameterized/prepared SQL statements instead of string concatenation.
+Instead of constructing SQL using raw input, the user-controlled value is passed as a query parameter.
+#### **6. Cross-Site Request Forgery (CSRF):**
+The secured version applies CSRF protection to sensitive state-changing operations.
+#### **7. Information Disclosure:**
+The secured version removes public access to backup files and prevents sensitive configuration files from being served as static resources.
+Sensitive configuration is stored outside publicly accessible directories and secrets are provided through environment variables or secure configuration mechanisms.
+#### **8. Cross-site Scripting (XSS):**
+The secured version ensures that user-controlled input is treated as data rather than executable HTML or JavaScript. User input is properly escaped before being rendered, and unsafe HTML content is not allowed where it is not required. Where applicable, the application also uses appropriate Content Security Policy (CSP) controls to reduce the impact of potential XSS vulnerabilities.
+
+
+## **7) Security flags**
 The vulnerable application contains a seven-part flag chain associated with the vulnerabilities.
 
 The flags are intentionally included as part of the cybersecurity lab and should only be used in the isolated project environment.
@@ -119,4 +145,4 @@ This version is intentionally vulnerable.
 
 Do not deploy this application to the public Internet or use it with real patient information, credentials, or production databases.
 
-The application should only be executed in an isolated and controlled environment.
+The application should only be executed in an isolated testing/laboratory environment.
